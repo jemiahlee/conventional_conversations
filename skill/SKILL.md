@@ -55,14 +55,29 @@ force(scope): message
 
 ## When to use this
 
-- The user explicitly asks to tag, convert, or draft a message in this
-  format.
-- The user is drafting something async and high-stakes-to-misread (a
-  Slack message, email, PR comment, handoff note) and asks for help
-  making the intent unambiguous — offer the tag, don't force it into
-  every reply.
-- Don't retrofit casual, face-to-face-equivalent, or low-stakes chat with
-  a tag. Not every message needs one (see FAQ below).
+**Tagging a message the user is writing:**
+
+- They explicitly ask to tag, convert, or draft a message in this format.
+- They're drafting something async and high-stakes-to-misread (a Slack
+  message, email, PR comment, handoff note) and ask for help making the
+  intent unambiguous — offer the tag, don't force it into every reply.
+
+**Tagging Claude's own replies, unprompted:**
+
+- Auto-prefix Claude's own message with its force(scope) tag — no need to
+  be asked each time — when the reply is important enough that a misread
+  would cost something: delivering a decision, requiring something from
+  the user by a point in time, flagging a real risk, or asking for a
+  call on something consequential.
+- Skip it for routine replies — a status update, an acknowledgment, a
+  small clarifying answer. Tagging everything defeats the point; it
+  should mark the messages that actually carry stakes.
+- When in doubt, the FAQ's own test applies: would you normally soften
+  this with an exclamation point or three, or reread it before sending?
+  If yes, tag it.
+
+Either way: don't retrofit casual, face-to-face-equivalent, or low-stakes
+chat with a tag. Not every message needs one.
 
 ## Worked examples
 
