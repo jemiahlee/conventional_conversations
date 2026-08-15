@@ -57,6 +57,10 @@ force(scope): message
   status"). If it announces a choice the *sender* made themselves, even a
   small implementation one, that's `decision`. When it's genuinely
   borderline, lean `info` — it's the lower-stakes read.
+- The message should add something the tag didn't already say. A scope
+  names a category, not a script — `require(plan): send me a plan by
+  Monday` is circular; `require(plan): I need the approach by Monday`
+  adds the part the tag couldn't.
 
 ## When to use this
 

@@ -397,6 +397,7 @@
       <li>Every message <span class="keyword">MUST</span> begin with a force, chosen from: <code>ask</code>, <code>tell</code>, <code>require</code>, <code>offer</code>.</li>
       <li>The force <span class="keyword">MAY</span> be followed by a scope in parentheses naming the topic — <code>advice</code>, <code>decision</code>, <code>feedback</code>, <code>info</code>, <code>clarification</code>, <code>plan</code>, <code>feeling</code>, or a term specific to your context.</li>
       <li><code>feeling</code> names the category, not the specific emotion — the emotion itself belongs in the message. Write <code>tell(feeling): frustrated with this deploy process</code>, not <code>tell(frustrated): ...</code></li>
+      <li>The message <span class="keyword">SHOULD</span> add something the tag didn't already say. A scope names a category, not a script — <code>require(plan): send me a plan by Monday</code> is circular; <code>require(plan): I need the approach by Monday</code> adds the part the tag couldn't.</li>
       <li>The tag <span class="keyword">MUST</span> be followed by a colon and a space, then the message.</li>
       <li><code>ask</code> signals the sender is soliciting a response and has no expectation beyond that.</li>
       <li><code>tell</code> signals the sender is stating something as settled from their side — no response required.</li>
@@ -406,7 +407,7 @@
       <li>A message with no natural scope <span class="keyword">MAY</span> omit the parenthetical and use the bare force — <code>ask: got a minute?</code></li>
     </ol>
 
-    <div class="note"><strong>On "require."</strong> It reads sharper than the other three by design — that's the point of tagging urgency explicitly instead of leaving it to punctuation. Once a team knows the definition in rule 7, the word does its job without carrying blame.</div>
+    <div class="note"><strong>On "require."</strong> It reads sharper than the other three by design — that's the point of tagging urgency explicitly instead of leaving it to punctuation. Once a team knows the definition in rule 8, the word does its job without carrying blame.</div>
 
     <div class="note"><strong>On "require(feeling)."</strong> Every other scope names something that can be produced on request — a decision, a number, a plan. A feeling can't be compelled the same way, so <code>require(feeling)</code> reads best as an invitation to self-report, not a demand: "give me an honest read on how this landed" rather than "give me your feelings by Friday."</div>
   </section>
@@ -437,9 +438,9 @@
           </tr>
           <tr>
             <th scope="row">decision</th>
-            <td>Have you decided?</td>
-            <td>I decided X.</td>
-            <td>Decide by Friday.</td>
+            <td>Where are we landing on this?</td>
+            <td>Went with X.</td>
+            <td>I need your call by Friday.</td>
             <td>I can make the call.</td>
           </tr>
           <tr>
@@ -459,16 +460,16 @@
           <tr>
             <th scope="row">clarification</th>
             <td>What did you mean by that?</td>
-            <td>To clarify, I meant X.</td>
-            <td>Clarify this by tomorrow.</td>
-            <td>Happy to clarify if it wasn't clear.</td>
+            <td>What I meant was X.</td>
+            <td>Walk me through this by tomorrow.</td>
+            <td>Happy to walk through it again if that landed wrong.</td>
           </tr>
           <tr>
             <th scope="row">plan</th>
-            <td>What's the plan?</td>
-            <td>Here's the plan: …</td>
-            <td>Send me a plan by Monday.</td>
-            <td>I can draft a plan.</td>
+            <td>How are we doing this?</td>
+            <td>Here's how this is going: X.</td>
+            <td>I need the approach by Monday.</td>
+            <td>I can put together the approach.</td>
           </tr>
           <tr>
             <th scope="row">feeling</th>
@@ -480,7 +481,7 @@
         </tbody>
       </table>
     </div>
-    <p class="matrix-caption">Scope list is illustrative, not exhaustive — see rule 9. <code>require(feeling)</code> is the one soft cell — see the note above.</p>
+    <p class="matrix-caption">Scope list is illustrative, not exhaustive — see rule 10. <code>require(feeling)</code> is the one soft cell — see the note above.</p>
   </section>
 
   <section id="faq">
@@ -493,7 +494,7 @@
     </div>
     <div class="faq-item">
       <h3>What if none of the seven scopes fit?</h3>
-      <p>Use the bare force with no scope (rule 10), or extend the list for your context. The four forces are meant to stay closed and small; scopes are meant to grow with the team using them.</p>
+      <p>Use the bare force with no scope (rule 11), or extend the list for your context. The four forces are meant to stay closed and small; scopes are meant to grow with the team using them.</p>
     </div>
     <div class="faq-item">
       <h3>Isn't "require" harsh?</h3>
