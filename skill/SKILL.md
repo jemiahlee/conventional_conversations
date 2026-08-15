@@ -156,3 +156,14 @@ its subject line is usually two commits.
 None of this is meant to catch every subtlety of a message — it's a
 signal for general intent, not a full parse. Treat the tag as a heading,
 not a summary.
+
+**Where does this taxonomy come from?** Loosely, John Searle's speech act
+theory — his taxonomy of illocutionary acts, building on J.L. Austin's
+earlier work in *How to Do Things with Words*. Searle split utterances
+into assertives, directives, commissives, expressives, and declaratives.
+`tell` maps to assertive; `ask` and `require` both sit under directive,
+weak and strong ends of the same category; `offer` maps to commissive.
+`feeling` covers what Searle called expressive, as a scope rather than
+its own force. Declaratives — utterances that change reality just by
+being said, like "I now pronounce you..." — didn't have a place in
+everyday text, so there's no fifth force.
