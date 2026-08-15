@@ -55,7 +55,3 @@ cp skill/SKILL.md ~/.claude/skills/conventional-conversations/SKILL.md
 
 See `site/index.html` for the full specification, examples, and the
 reference matrix.
-
-## License
-
-TBD.
