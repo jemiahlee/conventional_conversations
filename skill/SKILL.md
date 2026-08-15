@@ -67,6 +67,10 @@ force(scope): message
   names a category, not a script — `require(plan): send me a plan by
   Monday` is circular; `require(plan): I need the approach by Monday`
   adds the part the tag couldn't.
+- No separate tag for retracting or revising a prior message — reuse the
+  same tag as the thing being revised, and say so in the message.
+  `tell(decision): actually, holding until Monday — the migration needs
+  another pass` supersedes an earlier decision without new grammar.
 
 ## When to use this
 
