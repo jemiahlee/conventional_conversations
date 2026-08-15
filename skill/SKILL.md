@@ -135,3 +135,14 @@ small; scopes grow with the team using them.
 required field on a form doesn't imply judgment about the person filling
 it in. Once a team knows require means "I need this content," not "obey
 me," the word does its job without the edge.
+
+**What if a message needs more than one tag?** It doesn't get one — pick
+the dominant force and let the rest live in the words. If a tagged
+message keeps growing long, that's usually the tell: it's covering two
+forces under one tag, not that it needs more explanation. Split it into
+two tagged messages instead, the same way a commit that wants "and" in
+its subject line is usually two commits.
+
+None of this is meant to catch every subtlety of a message — it's a
+signal for general intent, not a full parse. Treat the tag as a heading,
+not a summary.
