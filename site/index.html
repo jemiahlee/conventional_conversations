@@ -411,7 +411,7 @@
       <li>The message <span class="keyword">SHOULD</span> add something the tag didn't already say. A scope names a category, not a script — <code>require(plan): send me a plan by Monday</code> is circular; <code>require(plan): I need the approach by Monday</code> adds the part the tag couldn't.</li>
       <li>The tag <span class="keyword">MUST</span> be followed by a colon and a space, then the message.</li>
       <li><code>ask</code> signals the sender is soliciting a response and has no expectation beyond that.</li>
-      <li><code>tell</code> signals the sender is stating something as settled from their side — no response required.</li>
+      <li><code>tell</code> signals the sender is stating something as settled from their side — no response required. This covers declining too: "I can't take this on right now" is a decision, aimed at someone else's ask instead of your own plan, not a separate category.</li>
       <li><code>require</code> signals the sender needs the named content produced or delivered. It is a call for content, never for agreement with it — <code>require(advice)</code> means "give me your recommendation," not "obey it."</li>
       <li><code>offer</code> signals the sender is making themselves available. It carries no obligation for the recipient to accept.</li>
       <li>Scope terms <span class="keyword">SHOULD</span> be drawn from a list shared across a team, so tags stay legible to everyone reading them. Teams <span class="keyword">MAY</span> extend the list for domain-specific needs.</li>

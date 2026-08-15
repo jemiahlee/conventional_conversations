@@ -32,7 +32,7 @@ force(scope): message
 | Force | Meaning |
 |---|---|
 | `ask` | Soliciting a response. No expectation beyond that. |
-| `tell` | Stating something as settled from the sender's side. No response required. |
+| `tell` | Stating something as settled from the sender's side. No response required. Covers declining too — "I can't take this on right now" is a decision aimed at someone else's ask, not a separate category. |
 | `require` | Needs the named content produced or delivered. A call for content, never for agreement with it — `require(advice)` means "give me your recommendation," not "obey it." |
 | `offer` | Making yourself available. No obligation on the recipient to accept. |
 
