@@ -52,6 +52,11 @@ force(scope): message
   `status` scope, it's redundant ("I'm doing X" = `tell(info)`).
 - Future intent to act is also just `tell(plan)` — no separate `intend`
   force or scope needed.
+- `decision` vs `info` — if the message reports completion of something
+  the *other party* already decided, that's `info` ("done, here's the
+  status"). If it announces a choice the *sender* made themselves, even a
+  small implementation one, that's `decision`. When it's genuinely
+  borderline, lean `info` — it's the lower-stakes read.
 
 ## When to use this
 
