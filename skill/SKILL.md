@@ -48,6 +48,12 @@ force(scope): message
   compelled the way a decision or a number can. Phrase it as an invitation
   to self-report ("give me an honest read on how this landed") rather than
   a demand.
+- `info` vs `feeling` — the test isn't whether it's phrased as a question,
+  it's whether the content can be produced on demand. A number, a time, a
+  status can always be pulled up and handed over — that's `info`. A
+  feeling can't be manufactured to order; it either already exists or it
+  doesn't. "I need to know how you feel about this" is still `feeling`,
+  not `info`, no matter how factually it's phrased.
 - `info` covers status/progress updates too — don't add a separate
   `status` scope, it's redundant ("I'm doing X" = `tell(info)`).
 - Future intent to act is also just `tell(plan)` — no separate `intend`
