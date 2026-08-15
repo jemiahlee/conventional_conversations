@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conventional Conversations</title>
+<meta name="description" content="A specification for tagging intent in text — force(scope): message — so tone doesn't get misread.">
+<style>
+  :root {
+    color-scheme: light dark;
+    --paper: #eff1ec;
+    --paper-raised: #ffffff;
+    --paper-recessed: #e6e9e2;
+    --ink: #1b1a17;
+    --ink-soft: #5b594f;
+    --ink-faint: #8b8a7d;
+    --rule: #d7dace;
+    --accent: #38477a;
+    --accent-tint: #e3e6ef;
+    --force-ask: #96691f;
+    --force-tell: #38477a;
+    --force-require: #9c4630;
+    --force-offer: #3c7057;
+    --font-display: "Iowan Old Style", "Sitka Text", "Palatino Linotype", Palatino, Georgia, serif;
+    --font-body: Optima, Candara, "Noto Sans", "Segoe UI", sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1b1e24;
+      --paper-raised: #22262e;
+      --paper-recessed: #171a1f;
+      --ink: #ece8de;
+      --ink-soft: #b3b0a2;
+      --ink-faint: #77756b;
+      --rule: #363b44;
+      --accent: #8598db;
+      --accent-tint: #2a3049;
+      --force-ask: #d9a94f;
+      --force-tell: #8598db;
+      --force-require: #dd8264;
+      --force-offer: #74c19c;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent-tint); color: var(--ink); }
+
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible, .navlink:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-wrap: balance;
+    color: var(--ink);
+    margin: 0 0 0.6em;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0;
+  }
+
+  /* ---- nav ---- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .navlinks {
+    display: flex;
+    gap: 1.1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .navlinks::-webkit-scrollbar { display: none; }
+  .navlink {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+  }
+  .navlink.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+  /* ---- layout ---- */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  section { padding: 3.4rem 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: none; }
+  section > .eyebrow { margin-bottom: 0.6rem; }
+  section h2 { font-size: 1.5rem; margin-bottom: 1.1rem; }
+  section p { margin: 0 0 1rem; max-width: 62ch; color: var(--ink); }
+  section p.lede { font-size: 1.08rem; color: var(--ink-soft); }
+
+  /* ---- hero ---- */
+  .hero { padding-top: 3.6rem; }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 2.7rem);
+    line-height: 1.1;
+    margin-bottom: 0.7rem;
+  }
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin-bottom: 2.2rem;
+  }
+
+  /* ---- tag chip ---- */
+  .msg {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.1rem 1.3rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    margin-bottom: 0.9rem;
+  }
+  .msg-tag {
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+  }
+  .msg-tag .force { font-weight: 700; }
+  .msg-tag .scope { color: var(--ink-faint); }
+  .msg-text { font-family: var(--font-display); font-size: 1.15rem; }
+  .msg-translate {
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+  .msg-translate::before { content: "→ "; }
+
+  .hero-msg .msg-text { font-size: 1.3rem; }
+
+  [data-force="ask"] .force { color: var(--force-ask); }
+  [data-force="tell"] .force { color: var(--force-tell); }
+  [data-force="require"] .force { color: var(--force-require); }
+  [data-force="offer"] .force { color: var(--force-offer); }
+
+  /* ---- examples grid ---- */
+  .examples-list { display: flex; flex-direction: column; gap: 0.9rem; }
+
+  /* ---- spec list ---- */
+  ol.rules { counter-reset: rule; list-style: none; padding: 0; margin: 1.2rem 0; }
+  ol.rules li {
+    counter-increment: rule;
+    position: relative;
+    padding-left: 2.6rem;
+    margin-bottom: 1.1rem;
+    max-width: 62ch;
+  }
+  ol.rules li::before {
+    content: counter(rule);
+    position: absolute;
+    left: 0;
+    top: 0.05em;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    width: 1.6rem;
+    height: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ol.rules code, p code, .note code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--paper-recessed);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+  .keyword { font-weight: 700; }
+
+  .grammar {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    background: var(--paper-recessed);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1rem 1.2rem;
+    margin: 1.4rem 0;
+  }
+  .grammar .force { color: var(--force-tell); font-weight: 700; }
+  .grammar .scope { color: var(--force-offer); font-weight: 700; }
+
+  .note {
+    border-left: 2px solid var(--accent);
+    padding: 0.15rem 0 0.15rem 1rem;
+    margin: 1.4rem 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    max-width: 58ch;
+  }
+  .note strong { color: var(--ink); }
+
+  /* ---- matrix table ---- */
+  .table-scroll { overflow-x: auto; margin: 1.4rem 0 0.5rem; }
+  table.matrix {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 640px;
+    font-size: 0.86rem;
+  }
+  table.matrix th, table.matrix td {
+    border: 1px solid var(--rule);
+    padding: 0.65rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.matrix thead th {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: var(--paper-recessed);
+  }
+  table.matrix thead th[data-force="ask"] { color: var(--force-ask); }
+  table.matrix thead th[data-force="tell"] { color: var(--force-tell); }
+  table.matrix thead th[data-force="require"] { color: var(--force-require); }
+  table.matrix thead th[data-force="offer"] { color: var(--force-offer); }
+  table.matrix tbody th {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: var(--paper-recessed);
+    white-space: nowrap;
+  }
+  table.matrix tbody td { color: var(--ink); font-family: var(--font-body); }
+  .matrix-caption {
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    margin-top: 0.6rem;
+  }
+
+  /* ---- faq ---- */
+  .faq-item { margin-bottom: 1.6rem; max-width: 62ch; }
+  .faq-item h3 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+  .faq-item p { color: var(--ink-soft); }
+
+  footer {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.4rem 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="wordmark">Conventional Conversations</span>
+    <nav class="navlinks" id="nav">
+      <a class="navlink" href="#summary">Summary</a>
+      <a class="navlink" href="#examples">Examples</a>
+      <a class="navlink" href="#why">Why</a>
+      <a class="navlink" href="#spec">Spec</a>
+      <a class="navlink" href="#matrix">Matrix</a>
+      <a class="navlink" href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section id="summary" class="hero">
+    <p class="eyebrow">v0.1 — a specification</p>
+    <h1>Say what kind of message you're sending, before you say it.</h1>
+    <p class="tagline">Text strips out tone — the same six words land calm from one reader and hostile from another. Conventional Conversations adds one small, explicit tag to the front of a message, so intent doesn't have to be guessed from mood.</p>
+
+    <div class="msg hero-msg" data-force="require">
+      <div class="msg-tag"><span class="force">require</span>(<span class="scope">decision</span>):</div>
+      <div class="msg-text">stage the rollout? prod exposure's too high to ship as planned before Friday.</div>
+      <div class="msg-translate">This isn't a suggestion. I need your call before we ship.</div>
+    </div>
+  </section>
+
+  <section id="examples">
+    <p class="eyebrow">Examples</p>
+    <h2>The same few words, different intents</h2>
+    <p class="lede">Each message below is unambiguous the moment you read the tag — no tone to misjudge, nothing to reread at 11pm wondering if they're upset.</p>
+
+    <div class="examples-list">
+      <div class="msg" data-force="ask">
+        <div class="msg-tag"><span class="force">ask</span>(<span class="scope">advice</span>):</div>
+        <div class="msg-text">should we ship Friday, or wait for QA?</div>
+        <div class="msg-translate">Looking for your input. No pressure either way.</div>
+      </div>
+      <div class="msg" data-force="tell">
+        <div class="msg-tag"><span class="force">tell</span>(<span class="scope">decision</span>):</div>
+        <div class="msg-text">shipping Friday. Rolled back the migration change.</div>
+        <div class="msg-translate">Decision's made — letting you know, not asking.</div>
+      </div>
+      <div class="msg" data-force="require">
+        <div class="msg-tag"><span class="force">require</span>(<span class="scope">feedback</span>):</div>
+        <div class="msg-text">review this by EOD — need sign-off before I merge.</div>
+        <div class="msg-translate">Not optional. I need your eyes on this today.</div>
+      </div>
+      <div class="msg" data-force="offer">
+        <div class="msg-tag"><span class="force">offer</span>(<span class="scope">clarification</span>):</div>
+        <div class="msg-text">happy to walk through the diagram again if the arrows were confusing.</div>
+        <div class="msg-translate">No judgment if this was unclear — I'll re-explain, just say the word.</div>
+      </div>
+      <div class="msg" data-force="ask">
+        <div class="msg-tag"><span class="force">ask</span>(<span class="scope">clarification</span>):</div>
+        <div class="msg-text">what did you mean by "soon" — end of day, or end of week?</div>
+        <div class="msg-translate">Genuinely uncertain what you meant, not being difficult.</div>
+      </div>
+      <div class="msg" data-force="tell">
+        <div class="msg-tag"><span class="force">tell</span>(<span class="scope">feeling</span>):</div>
+        <div class="msg-text">this is the third time the deploy process has broken this month, and it's genuinely frustrating.</div>
+        <div class="msg-translate">Naming it so it's not left for you to read between the lines.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <p class="eyebrow">Why</p>
+    <h2>Tone doesn't survive the trip through text</h2>
+    <p>Spoken conversation carries tone for free — pitch, pace, a raised eyebrow, a pause. Text carries none of it. So the reader supplies the missing tone themselves, usually out of their own emotional weather rather than yours. A message written calm at 2pm gets read anxious at 11pm. A one-line reply meant as efficient reads as curt.</p>
+    <p>Most fixes for this ask you to write <em>more</em>: soften with an exclamation point or emoji, pad the request with "just wondering," apologize before you've even asked. That adds noise without adding signal — the reader still has to infer intent, just from a longer message.</p>
+    <p>Conventional Conversations asks you to write less, but write it explicitly. State what kind of message this is before you say it. The tag carries the intent so the words don't have to perform it.</p>
+  </section>
+
+  <section id="spec">
+    <p class="eyebrow">Specification</p>
+    <h2>Grammar and rules</h2>
+
+    <div class="grammar"><span class="force">force</span>(<span class="scope">scope</span>): message</div>
+
+    <ol class="rules">
+      <li>Every message <span class="keyword">MUST</span> begin with a force, chosen from: <code>ask</code>, <code>tell</code>, <code>require</code>, <code>offer</code>.</li>
+      <li>The force <span class="keyword">MAY</span> be followed by a scope in parentheses naming the topic — <code>advice</code>, <code>decision</code>, <code>feedback</code>, <code>info</code>, <code>clarification</code>, <code>plan</code>, <code>feeling</code>, or a term specific to your context.</li>
+      <li><code>feeling</code> names the category, not the specific emotion — the emotion itself belongs in the message. Write <code>tell(feeling): frustrated with this deploy process</code>, not <code>tell(frustrated): ...</code></li>
+      <li>The tag <span class="keyword">MUST</span> be followed by a colon and a space, then the message.</li>
+      <li><code>ask</code> signals the sender is soliciting a response and has no expectation beyond that.</li>
+      <li><code>tell</code> signals the sender is stating something as settled from their side — no response required.</li>
+      <li><code>require</code> signals the sender needs the named content produced or delivered. It is a call for content, never for agreement with it — <code>require(advice)</code> means "give me your recommendation," not "obey it."</li>
+      <li><code>offer</code> signals the sender is making themselves available. It carries no obligation for the recipient to accept.</li>
+      <li>Scope terms <span class="keyword">SHOULD</span> be drawn from a list shared across a team, so tags stay legible to everyone reading them. Teams <span class="keyword">MAY</span> extend the list for domain-specific needs.</li>
+      <li>A message with no natural scope <span class="keyword">MAY</span> omit the parenthetical and use the bare force — <code>ask: got a minute?</code></li>
+    </ol>
+
+    <div class="note"><strong>On "require."</strong> It reads sharper than the other three by design — that's the point of tagging urgency explicitly instead of leaving it to punctuation. Once a team knows the definition in rule 7, the word does its job without carrying blame.</div>
+
+    <div class="note"><strong>On "require(feeling)."</strong> Every other scope names something that can be produced on request — a decision, a number, a plan. A feeling can't be compelled the same way, so <code>require(feeling)</code> reads best as an invitation to self-report, not a demand: "give me an honest read on how this landed" rather than "give me your feelings by Friday."</div>
+  </section>
+
+  <section id="matrix">
+    <p class="eyebrow">Reference</p>
+    <h2>The full matrix</h2>
+    <p class="lede">Every force paired with every scope should read naturally in plain speech. Here's all 28 — check yours against it before adding a new scope.</p>
+
+    <div class="table-scroll">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th scope="col">scope \ force</th>
+            <th scope="col" data-force="ask">ask</th>
+            <th scope="col" data-force="tell">tell</th>
+            <th scope="col" data-force="require">require</th>
+            <th scope="col" data-force="offer">offer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">advice</th>
+            <td>What should I do?</td>
+            <td>I think you should do X.</td>
+            <td>Give me your recommendation.</td>
+            <td>Happy to weigh in if useful.</td>
+          </tr>
+          <tr>
+            <th scope="row">decision</th>
+            <td>Have you decided?</td>
+            <td>I decided X.</td>
+            <td>Decide by Friday.</td>
+            <td>I can make the call.</td>
+          </tr>
+          <tr>
+            <th scope="row">feedback</th>
+            <td>Thoughts on my draft?</td>
+            <td>Draft was clear — cut section two.</td>
+            <td>Review this by end of day.</td>
+            <td>I can review it if you want a second pair of eyes.</td>
+          </tr>
+          <tr>
+            <th scope="row">info</th>
+            <td>What's the deploy time?</td>
+            <td>Deploy's at 5pm.</td>
+            <td>Send me the numbers.</td>
+            <td>I can pull the numbers.</td>
+          </tr>
+          <tr>
+            <th scope="row">clarification</th>
+            <td>What did you mean by that?</td>
+            <td>To clarify, I meant X.</td>
+            <td>Clarify this by tomorrow.</td>
+            <td>Happy to clarify if it wasn't clear.</td>
+          </tr>
+          <tr>
+            <th scope="row">plan</th>
+            <td>What's the plan?</td>
+            <td>Here's the plan: …</td>
+            <td>Send me a plan by Monday.</td>
+            <td>I can draft a plan.</td>
+          </tr>
+          <tr>
+            <th scope="row">feeling</th>
+            <td>How are you feeling about this?</td>
+            <td>I'm frustrated with this.</td>
+            <td>Give me an honest read on how this landed.</td>
+            <td>I'm here if you want to talk it through.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="matrix-caption">Scope list is illustrative, not exhaustive — see rule 9. <code>require(feeling)</code> is the one soft cell — see the note above.</p>
+  </section>
+
+  <section id="faq">
+    <p class="eyebrow">FAQ</p>
+    <h2>Questions</h2>
+
+    <div class="faq-item">
+      <h3>Isn't tagging every message awkward?</h3>
+      <p>Not every message needs one. Reach for it when the cost of misread tone is highest: async threads, cross-timezone handoffs, anything you'd normally soften with three exclamation points. Face-to-face and low-stakes chat don't need it.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What if none of the seven scopes fit?</h3>
+      <p>Use the bare force with no scope (rule 10), or extend the list for your context. The four forces are meant to stay closed and small; scopes are meant to grow with the team using them.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Isn't "require" harsh?</h3>
+      <p>It's a defined tag, not a tone of voice — a required field on a form doesn't imply judgment about the person filling it in. Once a team knows require means "I need this content," not "obey me," the word does its job without the edge.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>Conventional Conversations v0.1 — by <a href="https://github.com/jemiahlee">Jeremiah Lee</a></span>
+  <span>Inspired by <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a></span>
+</footer>
+
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.navlink'));
+    var sections = links.map(function (l) {
+      return document.getElementById(l.getAttribute('href').slice(1));
+    });
+    if (!('IntersectionObserver' in window)) return;
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var idx = sections.indexOf(entry.target);
+        if (idx === -1) return;
+        if (entry.isIntersecting) {
+          links.forEach(function (l) { l.classList.remove('active'); });
+          links[idx].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(function (s) { if (s) observer.observe(s); });
+  })();
+</script>
+</body>
+</html>
