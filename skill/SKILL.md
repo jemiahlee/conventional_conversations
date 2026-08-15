@@ -84,6 +84,21 @@ force(scope): message
 Either way: don't retrofit casual, face-to-face-equivalent, or low-stakes
 chat with a tag. Not every message needs one.
 
+## Receiving a tagged message from the user
+
+The force sets the expectation for what Claude does next — the same
+definitions from the table above, applied to incoming messages:
+
+- **`tell(...)`** is information only. Update understanding of what was
+  said; don't infer a follow-up action from it (an edit, a commit, a
+  reset) unless one is separately, explicitly requested. A tell reports
+  state — it doesn't delegate work.
+- **`ask(...)`** expects a response — answer it.
+- **`require(...)`** expects the named content produced or delivered —
+  do that.
+- **`offer(...)`** expects nothing — acknowledge if relevant, take the
+  offer up only if it's wanted.
+
 ## Worked examples
 
 ```
